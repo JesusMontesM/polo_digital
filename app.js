@@ -6,8 +6,6 @@ app.use(express.json());
 
 // handleSQLError------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-
-
 // crear conexion con mysql------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 const mysql = require("mysql2");
@@ -33,6 +31,9 @@ connection.connect(function (error) {
 
 // Endpoints para Index------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+// carrusel-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 app.get(`/carrusel`, function (request, response) {
   // select * from eventos
   connection.query("select * from eventos", function (error, result, fields) {
@@ -48,6 +49,9 @@ app.get(`/carrusel`, function (request, response) {
     response.send(eventos);
   });
 });
+
+// mostrar evento segun id------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 app.get("/evento/:idevento", function (request, response) {
   const idEvento = request.params.idevento;
@@ -109,11 +113,16 @@ app.post(`/login`, function (request, response) {
       if (result.length == 0) {
         response.send({ message: "email o password no validos" });
       } else {
-        response.send({ message: "usuario logueado" });
+        response.send({
+          message: `usuario logueado: ${email}`,
+          registrado: true,
+        });
       }
     }
   );
 });
+
+// registro--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 app.post(`/registro`, function (request, response) {
   // hacer un registro
@@ -121,6 +130,8 @@ app.post(`/registro`, function (request, response) {
   let apellidos = request.body.apellidos;
   let email = request.body.email;
   let password = request.body.password;
+  let razonsocial = request.body.razonsocial;
+  let clienteID;
 
   // console.log(request.body);
 
@@ -148,18 +159,28 @@ app.post(`/registro`, function (request, response) {
       }
       const usuarioID = resultselect[0].id;
 
-      // insert into empleados_clientes------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      connection
+        .promise()
+        .query(`SELECT id from clientes where razonsocial = '${razonsocial}'`)
+        .then(function (result) {
+          clienteID = result[0][0].id;
 
-      connection.query(
-        `insert into empleados_clientes (nombre, apellidos, usuarioID) values ("${nombre}", "${apellidos}", "${usuarioID}")`,
-        function (error, resultinsert, fields) {
-          if (error) {
-            response.status(400).send(`error: ${error.message}`);
-            return;
-          }
-          response.send(resultinsert);
-        }
-      );
+          // insert into empleados_clientes------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+          connection.query(
+            `insert into empleados_clientes (nombre, apellidos, usuarioID, clienteID) values ("${nombre}", "${apellidos}", "${usuarioID}", "${clienteID}")`,
+            function (error, resultinsert, fields) {
+              if (error) {
+                response.status(400).send(`error: ${error.message}`);
+                return;
+              }
+              response.send({
+                message: `usuario registrado: ${email}`,
+                registrado: true,
+              });
+            }
+          );
+        });
     }
   );
 });
@@ -167,6 +188,8 @@ app.post(`/registro`, function (request, response) {
 // Termina login y registro------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Endpoints para clientes------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// obtener listado clientes-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 app.get("/clientes", function (request, response) {
   connection.query(`select * from clientes`, function (error, result, fields) {
@@ -178,6 +201,8 @@ app.get("/clientes", function (request, response) {
   });
   // console.log("listado de clientes en base de datos");
 });
+
+// actualizar cliente-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 app.post("/clientes/:id", function (request, response) {
   let razonsocial = request.body.razonsocial;
@@ -192,13 +217,15 @@ app.post("/clientes/:id", function (request, response) {
         response.status(400).send(`error: ${error.message}`);
         return;
       }
-     
+
       response.send(request.body);
     }
   );
   console.log("cliente actualizado");
   // console.log("update clientes en base de datos");
 });
+
+// nuevo cliente----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 app.post("/clientes", function (request, response) {
   let razonsocial = request.body.razonsocial;
@@ -222,14 +249,19 @@ app.post("/clientes", function (request, response) {
 
 // extra------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+// mostrar los datos del cliente con el id seleccionado-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 app.get("/clientes/:id", function (request, response) {
-  connection.query(`select * from clientes where id = "${request.params.id}"`, function (error, result, fields) {
-    if (error) {
-      response.status(400).send(`error: ${error.message}`);
-      return;
+  connection.query(
+    `select * from clientes where id = "${request.params.id}"`,
+    function (error, result, fields) {
+      if (error) {
+        response.status(400).send(`error: ${error.message}`);
+        return;
+      }
+      response.send(result);
     }
-    response.send(result);
-  });
+  );
   console.log("datos del cliente");
   // console.log("obtiene los datos del cliente con el id en :id");
 });

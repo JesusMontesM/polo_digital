@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>login/registro</title>
+    <title>Zona Clientes</title>
 
     <!-- Google fonts----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
@@ -16,7 +16,7 @@
 
     <!-- Hoja de estilo----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
-    <link rel="stylesheet" href="/CSS/login-register.css" />
+    <link rel="stylesheet" href="/CSS/clientes.css" />
   </head>
   <body>
     <header>
@@ -48,60 +48,21 @@
     </nav>
 
     <main>
-      <!-- login----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
+      <!-- listado de clientes----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
-      <div>
-        <h3>Iniciar sesión</h3>
-        <p>Accede con tus datos personales</p>
+      <div id="listadoclientes"></div>
 
-        <input type="email" name="email" id="email" placeholder="Email" />
-        <input
-          type="password"
-          name="password"
-          id="password"
-          placeholder="Contraseña"
-        />
-        <button onclick="login()">Iniciar sesión</button>
-      </div>
+      <!-- datos del cliente y poder modificarlos----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
-      <!-- register----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
-
-      <div>
-        <h3>Regístrate</h3>
-        <p>Si todavía no tienes cuenta, ¿a que esperas? regístrate</p>
-
-        <input type="nombre" name="nombre" id="nombre" placeholder="Nombre" />
-        <input
-          type="apellidos"
-          name="apellidos"
-          id="apellidos"
-          placeholder="Apellidos"
-        />
-        <input
-          type="email"
-          name="email"
-          id="email-register"
-          placeholder="Email"
-        />
-        <input
-          type="password"
-          name="password"
-          id="password-register"
-          placeholder="Contraseña"
-        />
-        <input
-          type="password"
-          name="password"
-          id="repitecontraseña"
-          placeholder="Repite contraseña"
-        />
-        <input
-          type="text"
-          name="razonsocial"
-          id="razonsocial"
-          placeholder="Razonsocial"
-        />
-        <button onclick="register()">Crear cuenta</button>
+      <div id="datos">
+        <ul>
+          <li><input type="text" name="text" id="razonsocial" placeholder="Razon social" /></li>
+          <li><input type="text" name="text" id="cif" placeholder="CIF" /></li>
+          <li><input type="text" name="text" id="sector" placeholder="Sector" /></li>
+          <li><input type="text" name="text" id="telefono" placeholder="teléfono" /></li>
+          <li><input type="number" name="number" id="numeroempleados" placeholder="Número empleados" /></li>
+          <button onclick="guardar_cambios()">Guardar cambios</button>
+        </ul>
       </div>
     </main>
 
@@ -109,6 +70,7 @@
 
     <!-- llamada a nuestro js----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- -->
 
-    <script src="/js/login-register.js"></script>
+    <script src="/js/clientes.js"></script>
+    
   </body>
 </html>

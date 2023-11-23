@@ -51,13 +51,20 @@ nav div ul {
   flex-direction: row;
 }
 
+main {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: row;
+  font-size: 32px;
+}
+
 main div {
   align-items: stretch;
   margin: 0px 16px;
   padding: 0px;
   display: flex;
   justify-content: space-between;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 header h1 {
@@ -65,13 +72,4 @@ header h1 {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-}
-
-div #sabermas{
-  align-items: stretch;
-  margin: 0px 16px;
-  padding: 0px;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
 }
